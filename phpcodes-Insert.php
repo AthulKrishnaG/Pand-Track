@@ -1,6 +1,7 @@
 ﻿<?php
 include("dbconnection.php");
-
+include("session.php");
+error_reporting(0);
 
 if(isset($_POST["btnpatientAdd"]))
 {
@@ -9,7 +10,6 @@ if(isset($_POST["btnpatientAdd"]))
 	$p_mobilenum = $_POST['p_mobilenum'];
 	$p_address = $_POST['p_address'];
 	$p_email = $_POST['p_email'];
-	$ppassword = $_POST['ppassword'];
 	
 	$p_indate = date('Y-m-d H:i:s');
 	$p_update = date('Y-m-d H:i:s');
@@ -27,7 +27,7 @@ VALUES (NULL, '$p_name', '$p_gender', '$p_mobilenum', '$p_address', '$p_email', 
 		$lflag = "Available";
 								
 		//Insert into Login table
-		$logqry="INSERT INTO  `pantra`.`login` (`lid` ,`luname` ,`lpass` ,`lrole` ,`lflag` ) VALUES (NULL, '$p_email', '$ppassword', '$lrole', '$lflag')";
+		$logqry="INSERT INTO  `pantra`.`login` (`lid` ,`luname` ,`lpass` ,`lrole` ,`lflag` ) VALUES (NULL, '$p_email', '$p_mobilenum', '$lrole', '$lflag')";
 		$logresult=mysqli_query($dbconnection,$logqry);
 		
 		echo "<script> window.location.href ='success.php?msg=$msg'; </script>";
@@ -59,12 +59,12 @@ VALUES (NULL, '$d_title', '$d_date_of_onset', '$in_date', '$up_date')";
 	if($insertresult) 
 	{
 		
-		echo "Inserted";
+		echo "<script> window.location.href ='success.php?msg=$msg'; </script>";
 		exit();
 	} 
 	else 
 	{
-		echo "Not Inserted";
+		echo "<script> window.location.href ='error.php?msg=$msg'; </script>";
 		exit();
 	}	
 } 
@@ -89,12 +89,12 @@ VALUES (NULL, '$d_s_name', '$d_s_date_of_onset', '$in_date', '$up_date')";
 	if($insertresult) 
 	{
 		
-		echo "Inserted";
+		echo "<script> window.location.href ='success.php?msg=$msg'; </script>";
 		exit();
 	} 
 	else 
 	{
-		echo "Not Inserted";
+		echo "<script> window.location.href ='error.php?msg=$msg'; </script>";
 		exit();
 	}	
 } 
@@ -118,17 +118,18 @@ VALUES (NULL, '$d_m_name', '$d_m_dose', '$d_m_startingdate', '$d_m_duration', '$
 	if($insertresult) 
 	{
 		
-		echo "Inserted";
+		echo "<script> window.location.href ='success.php?msg=$msg'; </script>";
 		exit();
 	} 
 	else 
 	{
-		echo "Not Inserted";
+		echo "<script> window.location.href ='error.php?msg=$msg'; </script>";
 		exit();
 	}	
 } 
 if(isset($_POST["btnsourceadd"]))
 {
+	$d_source_patient = $_POST['d_source_patient'];
 	$d_source_confirmed_location = $_POST['d_source_confirmed_location'];
 	$d_source_state = $_POST['d_source_state'];
 	$d_source_district = $_POST['d_source_district'];
@@ -142,19 +143,19 @@ if(isset($_POST["btnsourceadd"]))
 	
 		
 	//Insert into Registation table
-	$insertqry="INSERT INTO  `pantra`.`source` (`d_source_id` ,`d_source_confirmed_location` ,`d_source_state`,`d_source_district` ,`d_source_panchayath`,`d_source_ward_no` ,`d_source_in_date`,`d_source_up_date`)
-VALUES (NULL, '$d_source_confirmed_location', '$d_source_state', '$d_source_district', '$d_source_panchayath','$d_source_ward_no', '$d_source_in_date','$d_source_up_date')";
+	$insertqry="INSERT INTO  `pantra`.`source` (`d_source_id` ,`d_source_patient` ,`d_source_confirmed_location` ,`d_source_state`,`d_source_district` ,`d_source_panchayath`,`d_source_ward_no` ,`d_source_in_date`,`d_source_up_date`)
+VALUES (NULL, '$d_source_patient','$d_source_confirmed_location', '$d_source_state', '$d_source_district', '$d_source_panchayath','$d_source_ward_no', '$d_source_in_date','$d_source_up_date')";
 	$insertresult=mysqli_query($dbconnection,$insertqry);
 	//Check whether the query was successful or not
 	if($insertresult) 
 	{
 		
-		echo "Inserted";
+		echo "<script> window.location.href ='success.php?msg=$msg'; </script>";
 		exit();
 	} 
 	else 
 	{
-		echo "Not Inserted";
+		echo "<script> window.location.href ='error.php?msg=$msg'; </script>";
 		exit();
 	}	
 } 
@@ -181,18 +182,19 @@ VALUES (NULL, '$h_state', '$h_district', '$h_taluk', '$h_block','$h_panchayath',
 	if($insertresult) 
 	{
 		
-		echo "Inserted";
+		echo "<script> window.location.href ='success.php?msg=$msg'; </script>";
 		exit();
 	} 
 	else 
 	{
-		echo "Not Inserted";
+		echo "<script> window.location.href ='error.php?msg=$msg'; </script>";
 		exit();
 	}	
 } 
 if(isset($_POST["btncontactadd"]))
 {
 	$c_district = $_POST['c_district'];
+	$c_patient = $_POST['c_patient'];
 	$c_visited_places = $_POST['c_visited_places'];
 	$c_explain_the_activities = $_POST['c_explain_the_activities'];
 	$c_explanation_activities_date = $_POST['c_explanation_activities_date'];
@@ -204,24 +206,25 @@ if(isset($_POST["btncontactadd"]))
 	
 		
 	//Insert into Registation table
-	$insertqry="INSERT INTO  `pantra`.`contact` (`c_id` ,`c_district` ,`c_visited_places`,`c_explain_the_activities` ,`c_explanation_activities_date`,`c_explanation_activities_time`,`c_in_date`,`c_up_date`)
-VALUES (NULL, '$c_district', '$c_visited_places', '$c_explain_the_activities','$c_explanation_activities_date','$c_explanation_activities_time','$c_in_date','$c_up_date')";
+	$insertqry="INSERT INTO  `pantra`.`contact` (`c_id` ,`c_patient` ,`c_district` ,`c_visited_places`,`c_explain_the_activities` ,`c_explanation_activities_date`,`c_explanation_activities_time`,`c_in_date`,`c_up_date`)
+VALUES (NULL, '$c_patient', '$c_district', '$c_visited_places', '$c_explain_the_activities','$c_explanation_activities_date','$c_explanation_activities_time','$c_in_date','$c_up_date')";
 	$insertresult=mysqli_query($dbconnection,$insertqry);
 	//Check whether the query was successful or not
 	if($insertresult) 
 	{
 		
-		echo "Inserted";
+		echo "<script> window.location.href ='success.php?msg=$msg'; </script>";
 		exit();
 	} 
 	else 
 	{
-		echo "Not Inserted";
+		echo "<script> window.location.href ='error.php?msg=$msg'; </script>";
 		exit();
 	}	
 } 
 if(isset($_POST["btnprimarycontactAdd"]))
 {
+	$c_p_patient = $_POST['c_p_patient'];
 	$c_p_person = $_POST['c_p_person'];
 	$c_p_district = $_POST['c_p_district'];
 	$c_p_town = $_POST['c_p_town'];
@@ -233,24 +236,25 @@ if(isset($_POST["btnprimarycontactAdd"]))
 	
 		
 	//Insert into Registation table
-	$insertqry="INSERT INTO  `pantra`.`primary_contact` (`c_p_id` ,`c_p_person` ,`c_p_district`,`c_p_town` ,`c_p_place` ,`c_p_in_date`,`c_p_up_date`)
-VALUES (NULL, '$c_p_person', '$c_p_district', '$c_p_town', '$c_p_place','$c_p_in_date','$c_p_up_date')";
+	$insertqry="INSERT INTO  `pantra`.`primary_contact` (`c_p_id` ,`c_p_patient` ,`c_p_person`,`c_p_district`,`c_p_town` ,`c_p_place` ,`c_p_in_date`,`c_p_up_date`)
+VALUES (NULL, '$c_p_person','$c_p_patient', '$c_p_district', '$c_p_town', '$c_p_place','$c_p_in_date','$c_p_up_date')";
 	$insertresult=mysqli_query($dbconnection,$insertqry);
 	//Check whether the query was successful or not
 	if($insertresult) 
 	{
 		
-		echo "Inserted";
+		echo "<script> window.location.href ='success.php?msg=$msg'; </script>";
 		exit();
 	} 
 	else 
 	{
-		echo "Not Inserted";
+		echo "<script> window.location.href ='error.php?msg=$msg'; </script>";
 		exit();
 	}	
 }
 if(isset($_POST["btnhistoryAdd"]))
 {
+	$h_patient	 = $_POST['h_patient'];
 	$h_days_after_the_onset_of_the_disease = $_POST['h_days_after_the_onset_of_the_disease'];
 	$h_effective_medicines = $_POST['h_effective_medicines'];
 	
@@ -260,48 +264,68 @@ if(isset($_POST["btnhistoryAdd"]))
 	
 		
 	//Insert into Registation table
-	$insertqry="INSERT INTO  `pantra`.`history` (`h_id` ,`h_days_after_the_onset_of_the_disease` ,`h_effective_medicines` ,`h_in_date`,`h_up_date`)
-VALUES (NULL, '$h_days_after_the_onset_of_the_disease', '$h_effective_medicines','$h_in_date','$h_up_date')";
+	$insertqry="INSERT INTO  `pantra`.`history` (`h_id` ,`h_patient` ,`h_days_after_the_onset_of_the_disease` ,`h_effective_medicines` ,`h_in_date`,`h_up_date`)
+VALUES (NULL, '$h_patient',  '$h_days_after_the_onset_of_the_disease','$h_effective_medicines','$h_in_date','$h_up_date')";
 	$insertresult=mysqli_query($dbconnection,$insertqry);
 	//Check whether the query was successful or not
 	if($insertresult) 
 	{
 		
-		echo "Inserted";
+		echo "<script> window.location.href ='success.php?msg=$msg'; </script>";
 		exit();
 	} 
 	else 
 	{
-		echo "Not Inserted";
+		echo "<script> window.location.href ='error.php?msg=$msg'; </script>";
 		exit();
 	}	
 }
-if(isset($_POST["btndoctoradd"]))
+if(isset($_POST["btnuseradd"]))
 {
-	$doctor_name = $_POST['doctor_name'];
-	$doctor_dept = $_POST['doctor_dept'];
+	$uempid = $_POST['uempid'];
+	$uname = $_POST['uname'];
+	$udesignation = $_POST['udesignation'];
+	$uemail = $_POST['uemail'];
+	$umob = $_POST['umob'];
+	$urole = $_POST['urole'];
 	
-	$doctor_in_date = date('Y-m-d H:i:s');
-	$doctor_up_date	 = date('Y-m-d H:i:s');
+	$u_in_date = date('Y-m-d H:i:s');
+	$u_up_date	 = date('Y-m-d H:i:s');
 	
+	$filename = $_FILES["uimg"]["name"];
+    $tempname = $_FILES["uimg"]["tmp_name"];   
+    $folder = "../images/user/".$filename;
 	
+	 if (move_uploaded_file($tempname, $folder))  {
 		
-	//Insert into Registation table
-	$insertqry="INSERT INTO  `pantra`.`doctor` (`doctor_id` ,`doctor_name` ,`doctor_dept` ,`doctor_in_date`,`doctor_up_date`)
-VALUES (NULL, '$doctor_name', '$doctor_dept','$doctor_in_date','$doctor_up_date')";
-	$insertresult=mysqli_query($dbconnection,$insertqry);
-	//Check whether the query was successful or not
-	if($insertresult) 
+		//Insert into Registation table
+		$insertqry="INSERT INTO  `pantra`.`user` (`uid` ,`uempid` ,`uname`,`udesignation`,`uemail` ,`umob`,`uimg`,`urole`,`ustatus` ,`u_in_date`,`u_up_date`)
+	VALUES (NULL, '$uempid', '$uname','$udesignation', '$uemail','$umob','$filename','$urole', '$ustatus','$u_in_date','$u_up_date')";
+		$insertresult=mysqli_query($dbconnection,$insertqry);
+		//Check whether the query was successful or not
+		if($insertresult) 
+		{
+			
+			$lflag = "Available";
+									
+			//Insert into Login table
+			$logqry="INSERT INTO  `pantra`.`login` (`lid` ,`luname` ,`lpass` ,`lrole` ,`lflag` ) VALUES (NULL, '$uemail', '$umob', '$urole', '$lflag')";
+			$logresult=mysqli_query($dbconnection,$logqry);
+			
+			echo "<script> window.location.href ='success.php?msg=$msg'; </script>";
+			exit();
+		} 
+		else 
+		{
+			echo "<script> window.location.href ='error.php?msg=$msg'; </script>";
+			exit();
+		}
+	 }
+	 else 
 	{
-		
-		echo "Inserted";
+		echo "<script> window.location.href ='error.php?msg=$msg'; </script>";
 		exit();
-	} 
-	else 
-	{
-		echo "Not Inserted";
-		exit();
-	}	
+	}
 }
 
 
@@ -328,12 +352,12 @@ VALUES (NULL, '$doctor_duty_list', '$doctor_duty_dept', '$doctor_duty_day_and_da
 	if($insertresult) 
 	{
 		
-		echo "Inserted";
+		echo "<script> window.location.href ='success.php?msg=$msg'; </script>";
 		exit();
 	} 
 	else 
 	{
-		echo "Not Inserted";
+		echo "<script> window.location.href ='error.php?msg=$msg'; </script>";
 		exit();
 	}	
 }
@@ -359,12 +383,12 @@ VALUES (NULL, '$discharge_p_name', '$discharge_p_gender', '$discharge_p_mobilenu
 	if($insertresult) 
 	{
 		
-		echo "Inserted";
+		echo "<script> window.location.href ='success.php?msg=$msg'; </script>";
 		exit();
 	} 
 	else 
 	{
-		echo "Not Inserted";
+		echo "<script> window.location.href ='error.php?msg=$msg'; </script>";
 		exit();
 	}	
 }
@@ -372,13 +396,3 @@ VALUES (NULL, '$discharge_p_name', '$discharge_p_gender', '$discharge_p_mobilenu
 
 
 ?>
-<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
-<html xmlns="http://www.w3.org/1999/xhtml">
-<head>
-<meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
-<title>SAJA</title>
-</head>
-
-<body>
-</body>
-</html>
